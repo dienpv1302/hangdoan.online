@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/png" href="assets/images/favicon.png">
+    <meta property="og:locale" content="vi_VN" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Hằng 💕 Đoán" />
+    <meta property="og:url" content="https://hangdoan.online" />
+    <meta property="og:site_name" content="Hằng 💕 Đoán" />
+    <meta property="og:image:width" content="400" />
+    <meta property="og:image:height" content="400" />
+    <title>Hằng 💕 Đoán</title>
+    <link href="assets/css/themify-icons.css" rel="stylesheet">
+    <link href="assets/css/font-awesome.min.css" rel="stylesheet">
+    <link href="assets/css/flaticon.css" rel="stylesheet">
+    <link href="assets/css/magnific-popup.css" rel="stylesheet">
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/animate.css" rel="stylesheet">
+    <link href="assets/css/owl.carousel.css" rel="stylesheet">
+    <link href="assets/css/owl.theme.css" rel="stylesheet">
+    <link href="assets/css/slick.css" rel="stylesheet">
+    <link href="assets/css/slick-theme.css" rel="stylesheet">
+    <link href="assets/css/swiper.min.css" rel="stylesheet">
+    <link href="assets/css/nice-select.css" rel="stylesheet">
+    <link href="assets/css/owl.transitions.css" rel="stylesheet">
+    <link href="assets/css/jquery.fancybox.css" rel="stylesheet">
+    <link href="assets/css/odometer-theme-default.css" rel="stylesheet">
+    <link href="assets/css/jquery-ui.css" rel="stylesheet">
+    <link href="assets/sass/style.css" rel="stylesheet">
+    <style>
+        /* Thiết lập giao diện cho nút tạm dừng và play */
+        .tdk-music {
+            position: fixed;
+            z-index: 99999;
+            left: 0;
+            bottom: 0;
+            width: 90px;
+            height: 90px;
+        }
+        .tdk-music svg {
+            fill: white;
+            position: absolute;
+            top: calc(50% - 20px);
+            left: calc(50% - 20px);
+            width: 40px;
+            height: 40px;
+        }
+        .tdk-bg-player {
+            width: 65px;
+            height: 65px;
+            top: 12px;
+            left: 12px;
+            position: absolute;
+            box-shadow: 0 0 0 0 #c31d1d;
+            background-color: rgba(121, 113, 113, 1.0);
+            border-radius: 50%;
+            border: 2px solid transparent;
+            transition: all .5s;
+            transform-origin: 50% 50%;
+        }
+        .tdk-player-text {
+            color: white;
+            white-space: nowrap;
+            position: absolute;
+            top: 25px;
+            left: 21px;
+            height: 40px;
+            line-height: 40px;
+            background-color: rgba(121, 113, 113, 1.0);
+            padding: 0 10px 0 60px;
+            border-radius: 30px;
+        }
+        .tdk-music .tdk-icon-pause {
+            display: none;
+        }
+        .tdk-music.playing .tdk-bg-player {
+            animation: zoom 1.3s infinite;
+        }
+        .tdk-music.playing .tdk-icon-play {
+            display: none;
+        }
+        .tdk-music.playing .tdk-icon-pause {
+            display: inline;
+        }
+
+        @keyframes zoom {
+            0% {
+                transform: scale(0.9);
+            }
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 15px transparent;
+            }
+            100% {
+                transform: scale(0.9);
+                box-shadow: 0 0 0 0 transparent;
+            }
+        }
+    </style>
+
+
+    <!-- Nút tạm dừng và play là hình ảnh SVG -->
+    <div class="tdk-music" onclick="toggleMusic()">
+        <div class="tdk-bg-player"></div>
+        <div class="tdk-player-text">Phát nhạc</div>
+        <svg xmlns="http://www.w3.org/2000/svg" class="tdk-icon-play" width="26" height="26" viewBox="0 0 26 26">
+            <path d="M20.208,11.857L6.902,5.26C6.499,5.057,6.018,5.079,5.634,5.312c-0.386,0.232-0.619,0.646-0.619,1.09V19.6 c0,0.443,0.233,0.856,0.619,1.089c0.208,0.126,0.444,0.19,0.683,0.19c0.201,0,0.401-0.046,0.586-0.138l13.306-6.599 c0.438-0.218,0.716-0.658,0.716-1.143S20.646,12.075,20.208,11.857z"></path>
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" class="tdk-icon-pause" width="26" height="26" viewBox="0 0 26 26">
+            <path d="M 7 5 C 6.449 5 6 5.449 6 6 L 6 20 C 6 20.551 6.449 21 7 21 L 10 21 C 10.551 21 11 20.551 11 20 L 11 6 C 11 5.449 10.551 5 10 5 L 7 5 z M 16 5 C 15.449 5 15 5.449 15 6 L 15 20 C 15 20.551 15.449 21 16 21 L 19 21 C 19.551 21 20 20.551 20 20 L 20 6 C 20 5.449 19.551 5 19 5 L 16 5 z"></path>
+        </svg>
+    </div>
+
+    <!-- Trình phát nhạc được ẩn -->
+    <audio id="musicPlayer" loop="true" allow="autoplay" autoplay="true" src="https://bachlong-trading.com/wp-content/uploads/2024/05/EM-DONG-Y-I-DO-DUC-PHUC-x-911-x-KHAC-HUNG-1ST-LIVE-STAGE.mp3"></audio>
+
+    <script>
+        var musicPlayer = document.getElementById("musicPlayer");
+        var playPauseButton = document.querySelector(".tdk-music");
+        var isPlaying = false; // Ban đầu là không đang phát
+
+        // Hàm để bật hoặc tạm dừng trình phát nhạc và thay đổi hình ảnh của nút
+        function toggleMusic() {
+            if (isPlaying) {
+                musicPlayer.pause();
+                playPauseButton.classList.remove("playing");
+            } else {
+                musicPlayer.play();
+                playPauseButton.classList.add("playing");
+            }
+            isPlaying = !isPlaying; // Chuyển trạng thái đang phát hoặc tạm dừng
+        }
+    </script>
+    <!-- <script>
+        // Đặt hàm toggleMusic() vào hàm setTimeout() để chạy sau 3 giây
+        setTimeout(function() {
+            toggleMusic();
+        }, 3000);
+    </script> -->
+</head>
+
+<body>
+
+    <!-- start page-wrapper -->
+    <div class="page-wrapper">
+        <!-- start preloader -->
+        <div class="preloader">
+            <div class="vertical-centered-box">
+                <div class="content">
+                    <div class="loader-circle"></div>
+                    <div class="loader-line-mask">
+                        <div class="loader-line"></div>
+                    </div>
+                    <img src="assets/images/preloader.svg" alt="">
+                </div>
+            </div>
+        </div>
+        <!-- end preloader -->
+        <!-- Start header -->
+        <header id="header">
+            <div class="wpo-site-header wpo-header-style-1" id="sticky-header">
+                <nav class="navigation navbar navbar-expand-lg navbar-light">
+                    <div class="container-fluid">
+                        <div class="row align-items-center">
+                            <div class="col-md-5 col-5 d-lg-none d-block">
+                                <div class="mobail-menu">
+                                    <button type="button" class="navbar-toggler open-btn">
+                                        <span class="sr-only">Toggle navigation</span>
+                                        <span class="icon-bar first-angle"></span>
+                                        <span class="icon-bar middle-angle"></span>
+                                        <span class="icon-bar last-angle"></span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-6 col-6 d-lg-block d-none">
+                                
+                            </div>
+                            <div class="col-md-7 col-7 d-lg-none dl-block">
+                                <div class="navbar-header">
+                                    <a class="navbar-brand" href="invitation.html"><img src="assets/images/logo.png" alt="Hằng Đoán Wedding"></a>
+                                </div>
+                            </div>
+                            <div class="col-lg-8 col-md-1 col-1">
+                                <div id="navbar" class="collapse navbar-collapse navigation-holder">
+                                    <button class="menu-close"><i class="ti-close"></i></button>
+                                    <ul class="nav navbar-nav mb-2 mb-lg-0">
+                                        <li><a href="index.html#gallery">Gallery</a></li>
+                                        <li><a href="index.html#event">Event</a></li>
+                                        
+                                    </ul>
+
+                                </div><!-- end of nav-collapse -->
+                            </div>
+                        </div>
+                    </div><!-- end of container -->
+                </nav>
+            </div>
+        </header>
+        <!-- end of header -->
+        <!-- start of hero -->
+        <section class="wpo-hero-slider wpo-hero-style-3">
+            <h2 class="hidden">some</h2>
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <div class="slide-inner slide-bg-image" data-background="assets/images/slider/slide-1.jpg">
+                        </div> <!-- end slide-inner -->
+                    </div> <!-- end swiper-slide -->
+
+                    <div class="swiper-slide">
+                        <div class="slide-inner slide-bg-image" data-background="assets/images/slider/slide-2.jpg">
+                        </div> <!-- end slide-inner -->
+                    </div> <!-- end swiper-slide -->
+
+                    <div class="swiper-slide">
+                        <div class="slide-inner slide-bg-image" data-background="assets/images/slider/slide-3.jpg">
+                        </div> <!-- end slide-inner -->
+                    </div> <!-- end swiper-slide -->
+
+                </div>
+                <!-- end swiper-wrapper -->
+
+                <!-- swipper controls -->
+                <div class="swiper-pagination"></div>
+            </div>
+        </section>
+        <!-- end of hero slider -->
+        <!-- start wpo-wedding-date -->
+        <section class="wpo-wedding-date">
+            <div class="container">
+                <h2 class="wow fadeInUp" data-wow-duration="1000ms">
+                    <span class="shape-1"><img src="assets/images/slider/shape.png" alt=""></span>
+                    Văn Đoán & Thu Hằng
+                    <span class="shape-2"><img src="assets/images/slider/shape2.png" alt=""> </span>
+                </h2>
+                <p class="wow fadeInUp" data-wow-duration="1200ms">Hôn lễ được tổ chức vào ngày 24 tháng 11 năm 2024</p>
+                <div class="row wow fadeInUp" data-wow-duration="1400ms">
+                    <div class="col col-xs-12">
+                        <div class="clock-grids">
+                            <div id="clock" data-date="2024/11/24 11:00"></div>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- end container -->
+        </section>
+        <!-- end wpo-wedding-date -->
+        <!-- start couple-section -->
+        <section class="wpo-couple-section section-padding" id="couple">
+            <div class="container">
+                <div class="couple-area clearfix">
+                    <div class="row align-items-center">
+                        <div class="col col-md-5 col-12">
+                            <div class="couple-item wow fadeInLeftSlow" data-wow-duration="1700ms">
+                                <div class="couple-img">
+                                    <img src="assets/images/couple/ChuRe.JPG" alt="" style="max-width: 400px; max-height: 400px;">
+                                </div>
+                                <div class="couple-text">
+                                    <h3>Văn Đoán</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col col-md-2 col-12">
+                            <div class="middle-couple-shape wow fadeInUp" data-wow-duration="1000ms">
+                                <div class="shape">
+                                    <img src="assets/images/couple/shape.png" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col col-md-5 col-12">
+                            <div class="couple-item wow fadeInRightSlow" data-wow-duration="1700ms">
+                                <div class="couple-img">
+                                    <img src="assets/images/couple/CoDau.JPG" alt="" style="max-width: 400px; max-height: 400px;">
+                                </div>
+                                <div class="couple-text">
+                                    <h3>Thu Hằng</h3>                                   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- end container -->
+        </section>
+        <!-- end couple-section -->
+        
+        <!-- end story-section -->
+        <!-- start wpo-portfolio-section -->
+        <section class="wpo-portfolio-section-s2 pb-0 section-padding" id="gallery">
+            <div class="container">
+                <div class="wpo-section-title">
+                    <h4><a href="https://photos.app.goo.gl/itR26jXCSneDteoV9" style="color: #939580;">Sweet Memories</a></h4>
+                    <h2>Ảnh cưới</h2>
+                </div>
+                <div class="sortable-gallery">
+                    <div class="gallery-filters"></div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="portfolio-grids gallery-container clearfix">                                
+                                <div class="grid">
+                                    <div class="img-holder">
+                                        <a href="assets/images/portfolio/1.jpg" class="fancybox"
+                                            data-fancybox-group="gall-1">
+                                            <img src="assets/images/portfolio/1.jpg" alt class="img img-responsive">
+                                            <div class="hover-content">
+                                                <i class="ti-plus"></i>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="grid">
+                                    <div class="img-holder">
+                                        <a href="assets/images/portfolio/1.jpg" class="fancybox"
+                                            data-fancybox-group="gall-1">
+                                            <img src="assets/images/portfolio/2.jpg" alt class="img img-responsive">
+                                            <div class="hover-content">
+                                                <i class="ti-plus"></i>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="grid">
+                                    <div class="img-holder">
+                                        <a href="assets/images/portfolio/3.jpg" class="fancybox"
+                                            data-fancybox-group="gall-1">
+                                            <img src="assets/images/portfolio/3.jpg" alt class="img img-responsive">
+                                            <div class="hover-content">
+                                                <i class="ti-plus"></i>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                
+                                <div class="grid">
+                                    <div class="img-holder">
+                                        <a href="assets/images/portfolio/4.jpg" class="fancybox"
+                                            data-fancybox-group="gall-1">
+                                            <img src="assets/images/portfolio/4.jpg" alt class="img img-responsive">
+                                            <div class="hover-content">
+                                                <i class="ti-plus"></i>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div> <!-- end container -->
+        </section>
+        <!-- end wpo-portfolio-section -->
+
+
+        <!-- start wpo-event-section -->
+        <section class="wpo-event-section section-padding pb-0" id="event">
+            <div class="container">
+                <div class="wpo-section-title">
+                    <h4>Our Wedding</h4>
+                    <h2><a href="invitation.html" style="color: sienna;">Thời gian & địa điểm</a></h2>
+                </div>
+                <div class="wpo-event-wrap">
+                    <div class="row">
+                        <div class="col col-lg-4 col-md-6 col-12">
+                            <div class="wpo-event-item">
+                                <div class="wpo-event-img">
+                                    <img src="assets/images/event/1.jpg" alt="">
+                                </div>
+                                <div class="wpo-event-text">
+                                    <ul>
+                                        <li>10 giờ 00 Thứ Bảy <br/> 23.11.2024</li>
+                                        <li>Tư Gia Nhà Gái</li>
+                                        <li>Số nhà 56, Ng. 205/53, Đ. Xuân Đỉnh, Q. Bắc Từ Liêm, Tp. Hà Nội</li>
+                                        <li> <a target="_blank" href="https://maps.app.goo.gl/LN4hfwJbfRdn2rP87">Xem địa chỉ</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col col-lg-4 col-md-6 col-12">
+                            <div class="wpo-event-item">
+                                <div class="wpo-event-img">
+                                    <img src="assets/images/event/2.jpg" alt="">
+                                    <div class="title"><h2>Lễ Thành Hôn</h2></div>
+                                </div>
+                                <div class="wpo-event-text">
+                                    <ul>
+                                        <li>11 giờ 30 Chủ Nhật 
+                                            <br/>24.11.2024</li>
+                                        <li>Tư Gia Nhà Trai</li>
+                                        <li>Xóm 32, Xã Hải Minh, Huyện Hải Hậu, Tỉnh Nam Định</li> 
+                                        <li> <a target="_blank"
+                                                href="https://maps.app.goo.gl/AHfvJBQJt8uPPumu7">Xem địa chỉ</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col col-lg-4 col-md-6 col-12">
+                            <div class="wpo-event-item">
+                                <div class="wpo-event-img">
+                                    <img src="assets/images/event/3.jpg" alt="">
+                                </div>
+                                <div class="wpo-event-text">
+                                    <ul>
+                                        <li>12 giờ 00 Chủ Nhật 
+                                            <br/>24.11.2024</li>
+                                        <li>Tư Gia Nhà Trai</li>
+                                        <li>Xóm 32, Xã Hải Minh, Huyện Hải Hậu, Tỉnh Nam Định</li> 
+                                        <li> <a target="_blank"
+                                                href="https://maps.app.goo.gl/AHfvJBQJt8uPPumu7">Xem địa chỉ</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!-- end container -->
+        </section>
+        <!-- end wpo-event-section -->
+        <div class="wpo-site-footer text-center">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="footer-image">
+                            <a class="logo" href="index.html"><img src="assets/images/qr.png" alt="" style="max-width: 200px;"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end of page-wrapper -->
+    <div class="snowflakes" aria-hidden="true">
+        <div class="snowflake" style="font-size: 15px;">♥️</div>
+        <div class="snowflake">❅</div>
+        <div class="snowflake" style="font-size: 10px;">♥️ </div>
+        <div class="snowflake">❅</div>
+        <div class="snowflake" style="font-size: 16px;">♥️</div>
+        <div class="snowflake" style="font-size: 22px;">♥️</div>
+        <div class="snowflake" style="font-size: 18px;">♥️</div>
+        <div class="snowflake" style="font-size: 20px;">♥️</div>
+        <div class="snowflake" style="font-size: 16px;">♥️</div>
+        <div class="snowflake" style="font-size: 20px;">♥️</div>
+        </div>
+        <style>
+          @-webkit-keyframes snowflakes-fall {
+            0% {top:-10%}
+            100% {top:100%}
+          }
+          @-webkit-keyframes snowflakes-shake {
+            0%,100% {-webkit-transform:translateX(0);transform:translateX(0)}
+            50% {-webkit-transform:translateX(80px);transform:translateX(80px)}
+          }
+          @keyframes snowflakes-fall {
+            0% {top:-10%}
+            100% {top:100%}
+          }
+          @keyframes snowflakes-shake {
+            0%,100%{ transform:translateX(0)}
+            50% {transform:translateX(80px)}
+          }
+          .snowflake {
+            color: #fff;
+            font-size: 1em;
+            font-family: Arial, sans-serif;
+            text-shadow: 0 0 5px #000;
+            position:fixed;
+            top:-10%;
+            z-index:9999;
+            -webkit-user-select:none;
+            -moz-user-select:none;
+            -ms-user-select:none;
+            user-select:none;
+            cursor:default;
+            -webkit-animation-name:snowflakes-fall,snowflakes-shake;
+            -webkit-animation-duration:10s,3s;
+            -webkit-animation-timing-function:linear,ease-in-out;
+            -webkit-animation-iteration-count:infinite,infinite;
+            -webkit-animation-play-state:running,running;
+            animation-name:snowflakes-fall,snowflakes-shake;
+            animation-duration:10s,3s;
+            animation-timing-function:linear,ease-in-out;
+            animation-iteration-count:infinite,infinite;
+            animation-play-state:running,running;
+          }
+          .snowflake:nth-of-type(0){
+            left:1%;-webkit-animation-delay:0s,0s;animation-delay:0s,0s
+          }
+          .snowflake:nth-of-type(1){
+            left:10%;-webkit-animation-delay:1s,1s;animation-delay:1s,1s
+          }
+          .snowflake:nth-of-type(2){
+            left:20%;-webkit-animation-delay:6s,.5s;animation-delay:6s,.5s
+          }
+          .snowflake:nth-of-type(3){
+            left:30%;-webkit-animation-delay:4s,2s;animation-delay:4s,2s
+          }
+          .snowflake:nth-of-type(4){
+            left:40%;-webkit-animation-delay:2s,2s;animation-delay:2s,2s
+          }
+          .snowflake:nth-of-type(5){
+            left:50%;-webkit-animation-delay:8s,3s;animation-delay:8s,3s
+          }
+          .snowflake:nth-of-type(6){
+            left:60%;-webkit-animation-delay:6s,2s;animation-delay:6s,2s
+          }
+          .snowflake:nth-of-type(7){
+            left:70%;-webkit-animation-delay:2.5s,1s;animation-delay:2.5s,1s
+          }
+          .snowflake:nth-of-type(8){
+            left:80%;-webkit-animation-delay:1s,0s;animation-delay:1s,0s
+          }
+          .snowflake:nth-of-type(9){
+            left:90%;-webkit-animation-delay:3s,1.5s;animation-delay:3s,1.5s
+          }
+          .snowflake:nth-of-type(10){
+            left:25%;-webkit-animation-delay:2s,0s;animation-delay:2s,0s
+          }
+          .snowflake:nth-of-type(11){
+            left:65%;-webkit-animation-delay:4s,2.5s;animation-delay:4s,2.5s
+          }
+        </style></div>
+    <!-- All JavaScript files
+    ================================================== -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <!-- Plugins for this template -->
+    <script src="assets/js/modernizr.custom.js"></script>
+    <script src="assets/js/jquery.dlmenu.js"></script>
+    <script src="assets/js/jquery-plugin-collection.js"></script>
+    <!-- Custom script for this template -->
+    <script src="assets/js/script.js"></script>
+
+</body>
+
+
+</html>
