@@ -115,7 +115,7 @@
     </div>
 
     <!-- Trình phát nhạc được ẩn -->
-    <audio id="musicPlayer" loop="true" allow="autoplay" autoplay="true" src="https://bachlong-trading.com/wp-content/uploads/2024/05/EM-DONG-Y-I-DO-DUC-PHUC-x-911-x-KHAC-HUNG-1ST-LIVE-STAGE.mp3"></audio>
+    <audio id="musicPlayer" loop="true" allow="autoplay" autoplay="true" src="assets/IDo.mp3"></audio>
 
     <script>
         var musicPlayer = document.getElementById("musicPlayer");
@@ -140,6 +140,26 @@
             toggleMusic();
         }, 3000);
     </script> -->
+
+    <script>
+        // Phát nhạc ngay khi người dùng nhấp/chạm vào bất kỳ vị trí nào trên trang lần đầu
+        function enableAutoplayOnInteraction() {
+            musicPlayer.play().then(function() {
+                isPlaying = true;
+                playPauseButton.classList.add("playing");
+            }).catch(function(error) {
+                console.log("Phát nhạc bị chặn:", error);
+            });
+
+            // Xóa sự kiện sau khi đã kích hoạt lần đầu
+            document.removeEventListener('click', enableAutoplayOnInteraction);
+            document.removeEventListener('touchstart', enableAutoplayOnInteraction);
+        }
+
+        // Lắng nghe sự kiện tương tác đầu tiên
+        document.addEventListener('click', enableAutoplayOnInteraction);
+        document.addEventListener('touchstart', enableAutoplayOnInteraction);
+    </script>
 </head>
 
 <body>
@@ -372,10 +392,10 @@
                                 </div>
                                 <div class="wpo-event-text">
                                     <ul>
-                                        <li>10 giờ 00 Thứ Bảy <br/> 23.11.2024</li>
+                                        <li>10 giờ 00 Thứ Bảy <br/> 23.09.2026</li>
                                         <li>Tư Gia Nhà Gái</li>
-                                        <li>Số nhà 56, Ng. 205/53, Đ. Xuân Đỉnh, Q. Bắc Từ Liêm, Tp. Hà Nội</li>
-                                        <li> <a target="_blank" href="https://maps.app.goo.gl/LN4hfwJbfRdn2rP87">Xem địa chỉ</a></li>
+                                        <li>Xóm Bắc Bồi, Xã Hải Minh, Huyện Hải Hậu, Tỉnh Nam Định</li>
+                                        <li> <a target="_blank" href="https://maps.app.goo.gl/AHfvJBQJt8uPPumu7">Xem địa chỉ</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -389,7 +409,7 @@
                                 <div class="wpo-event-text">
                                     <ul>
                                         <li>11 giờ 30 Chủ Nhật 
-                                            <br/>24.11.2024</li>
+                                            <br/>24.09.2026</li>
                                         <li>Tư Gia Nhà Trai</li>
                                         <li>Xóm 32, Xã Hải Minh, Huyện Hải Hậu, Tỉnh Nam Định</li> 
                                         <li> <a target="_blank"
@@ -406,7 +426,7 @@
                                 <div class="wpo-event-text">
                                     <ul>
                                         <li>12 giờ 00 Chủ Nhật 
-                                            <br/>24.11.2024</li>
+                                            <br/>24.09.2026</li>
                                         <li>Tư Gia Nhà Trai</li>
                                         <li>Xóm 32, Xã Hải Minh, Huyện Hải Hậu, Tỉnh Nam Định</li> 
                                         <li> <a target="_blank"
