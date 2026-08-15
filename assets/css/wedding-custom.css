@@ -1,0 +1,877 @@
+/* =========================================================================
+   Giao diện bổ sung: Lời chúc + Hộp mừng cưới (QR) + Chỉnh khung ảnh
+   Bảng màu bám theo theme: #D4B0A5 (chính) / #939580 (phụ) / #F3E1DB (viền)
+   ========================================================================= */
+
+/* ---------- Các thông số dễ chỉnh ----------
+   Muốn ảnh to/nhỏ hơn nữa thì sửa mấy con số ở đây là đủ.            */
+:root {
+    --hero-width: 820px;       /* bề ngang khung ảnh slider đầu trang          */
+    --hero-height: 780px;      /* chiều cao khung ảnh slider (desktop)         */
+    --hero-ratio: 0.95;        /* chiều cao / bề ngang khung, dùng cho mobile  */
+    --hero-fit: cover;         /* cover = lấp đầy khung, cắt rìa.
+                                  Đổi thành contain nếu muốn thấy trọn ảnh    */
+    --gallery-ratio: 3 / 4;    /* tỉ lệ khung ảnh cưới: rộng / cao             */
+    --gallery-ratio-mobile: 3 / 4;
+    --gallery-focus: center;   /* phần ảnh được giữ lại khi cắt.
+                                  Đổi thành "center top" nếu muốn ưu tiên mặt */
+}
+
+/* ---------- Slider đầu trang ----------
+   Ảnh cưới gần vuông (khoảng 1040x1015) nhưng khung slider mặc định chiếm 90%
+   bề ngang màn hình. Với background-size: cover, trình duyệt phải phóng ảnh
+   gần 2 lần để phủ hết bề ngang -> mặt bị zoom to và cắt mất nửa chiều cao.
+   Khung mới 820x780 gần đúng tỉ lệ ảnh nên ảnh chỉ còn khoảng 0.78 lần cỡ
+   gốc và gần như không bị cắt, đồng thời viền mờ bg.jpg ôm sát ảnh.           */
+.wpo-hero-slider.wpo-hero-style-3 {
+    height: var(--hero-height);   /* dự phòng cho trình duyệt cũ */
+    /* Màn hình hẹp hơn khung thì chiều cao co theo tỉ lệ ảnh, nhờ vậy
+       ảnh không bị cắt hai bên trên điện thoại. */
+    height: min(var(--hero-height), calc(100vw * var(--hero-ratio)));
+    background: #FDF8F6;       /* nền kem cho khoảng trống hai bên */
+}
+
+/* Căn giữa bằng left/right + margin auto, KHÔNG dùng transform:
+   Swiper chạy hiệu ứng fade nên nó tự ghi đè transform của slide,
+   dùng translateX(-50%) ở đây sẽ bị mất và ảnh bị đẩy lệch sang phải. */
+.wpo-hero-slider.wpo-hero-style-3 .slide-inner {
+    left: 0;
+    right: 0;
+    width: auto;
+    max-width: var(--hero-width);
+    margin-left: auto;
+    margin-right: auto;
+    background-size: var(--hero-fit);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* Lớp viền mờ có sẵn của theme (bg.jpg) kéo vừa đúng khung mới
+   để viền ôm đều cả bốn cạnh thay vì bị cắt hai bên. */
+.wpo-hero-slider.wpo-hero-style-3 .slide-inner:after {
+    background-size: 100% 100%;
+}
+
+/* ---------- Mục "Ảnh cưới": các ô bằng nhau, ảnh khít khung ----------
+   Ảnh gốc là ảnh dọc (khoảng 670x1010) nên khi kéo full chiều rộng ô thì rất
+   cao. Đưa về khung tỉ lệ cố định, ảnh lấp đầy ô và cắt bớt phần thừa.       */
+.wpo-portfolio-section-s2 .portfolio-grids .grid .img-holder a {
+    display: block;   /* bỏ khoảng hở dưới ảnh, lớp phủ khi rê chuột khít ảnh */
+}
+
+.wpo-portfolio-section-s2 .portfolio-grids .grid .img-holder img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: var(--gallery-ratio);
+    -o-object-fit: cover;
+       object-fit: cover;
+    -o-object-position: var(--gallery-focus);
+       object-position: var(--gallery-focus);
+    display: block;
+}
+
+/* Màn hình nhỏ vẫn giữ 2 cột để ảnh không chiếm trọn chiều cao điện thoại */
+@media (max-width: 575px) {
+    .wpo-portfolio-section-s2 .portfolio-grids .grid {
+        width: 50%;
+    }
+
+    .wpo-portfolio-section-s2 .portfolio-grids .grid .img-holder img {
+        aspect-ratio: var(--gallery-ratio-mobile);
+    }
+}
+
+/* ---------- Bảng lịch tháng cưới ---------- */
+.wedding-calendar {
+    max-width: 420px;
+    margin: 45px auto 0;
+}
+
+.wedding-calendar-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border: 1px solid #F3E1DB;
+}
+
+.wedding-calendar-table caption {
+    caption-side: top;
+    padding: 16px 10px 12px;
+    font-size: 20px;
+    color: #323232;
+    letter-spacing: .5px;
+    background: #fff;
+    border-bottom: 1px solid #F3E1DB;
+}
+
+.wedding-calendar-table th {
+    padding: 10px 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: #939580;
+    text-transform: uppercase;
+}
+
+.wedding-calendar-table td {
+    padding: 9px 0;
+    text-align: center;
+    font-size: 15px;
+    color: #848892;
+    width: 14.28%;
+}
+
+.wedding-calendar-table td.is-empty {
+    color: transparent;
+}
+
+/* Vòng tròn vẽ bằng radial-gradient để nằm dưới chữ mà không cần z-index âm
+   (z-index âm sẽ bị nền trắng của bảng che mất). */
+.wedding-calendar-table td.is-marked {
+    color: #fff;
+    font-weight: 500;
+    background-image: radial-gradient(circle at center, #D4B0A5 0, #D4B0A5 17px, transparent 18px);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.wedding-calendar-legend {
+    list-style: none;
+    margin: 18px 0 0;
+    padding: 0;
+    text-align: center;
+}
+
+.wedding-calendar-legend li {
+    font-size: 15px;
+    color: #848892;
+    line-height: 1.9em;
+}
+
+@media (max-width: 575px) {
+    .wedding-calendar {
+        margin-top: 30px;
+    }
+
+    .wedding-calendar-table td {
+        padding: 7px 0;
+        font-size: 14px;
+    }
+
+    .wedding-calendar-table td.is-marked {
+        background-image: radial-gradient(circle at center, #D4B0A5 0, #D4B0A5 15px, transparent 16px);
+    }
+}
+
+/* ---------- Lời ngỏ của cô dâu & chú rể ---------- */
+.couple-text .couple-intro {
+    font-size: 16px;
+    line-height: 1.9em;
+    color: #848892;
+    max-width: 420px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+@media (max-width: 767px) {
+    .couple-text .couple-intro {
+        font-size: 15px;
+        margin-bottom: 30px;
+    }
+}
+
+/* ---------- Câu trích và nút xem toàn bộ album ---------- */
+.wpo-section-title .gallery-quote {
+    max-width: 620px;
+    margin: 22px auto 0;
+    font-size: 17px;
+    line-height: 1.8em;
+    color: #939580;
+    font-style: italic;
+}
+
+.gallery-more {
+    margin-top: 10px;
+}
+
+/* ---------- Trang album ảnh cưới (gallery.html) ---------- */
+.wpo-album-section {
+    background: #FDF8F6;
+}
+
+.wpo-section-title .album-count {
+    margin: 14px 0 0;
+    font-size: 15px;
+    color: #939580;
+}
+
+.album-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 20px;
+}
+
+@media (max-width: 767px) {
+    .album-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 12px;
+    }
+}
+
+.album-item {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 1px solid #F3E1DB;
+    background: #fff;
+    cursor: pointer;
+    overflow: hidden;
+    position: relative;
+    aspect-ratio: 2 / 3;
+}
+
+.album-item img {
+    width: 100%;
+    height: 100%;
+    -o-object-fit: cover;
+       object-fit: cover;
+    display: block;
+    -webkit-transition: -webkit-transform .45s ease;
+    transition: transform .45s ease;
+}
+
+.album-item:hover img,
+.album-item:focus img {
+    -webkit-transform: scale(1.06);
+            transform: scale(1.06);
+}
+
+.album-item:focus-visible {
+    outline: 2px solid #D4B0A5;
+    outline-offset: 2px;
+}
+
+.album-back {
+    margin-top: 55px;
+}
+
+/* ---------- Khung xem ảnh phóng to ---------- */
+.album-viewer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100000;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+}
+
+.album-viewer[hidden] {
+    display: none;
+}
+
+.album-viewer-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(30, 26, 24, .92);
+}
+
+.album-viewer-figure {
+    position: relative;
+    margin: 0;
+    padding: 0 60px;
+    text-align: center;
+    max-width: 100%;
+}
+
+@media (max-width: 767px) {
+    .album-viewer-figure {
+        padding: 0 12px;
+    }
+}
+
+.album-viewer-figure img {
+    max-width: 100%;
+    max-height: 84vh;
+    display: block;
+    margin: 0 auto;
+}
+
+.album-viewer-figure figcaption {
+    color: #F3E1DB;
+    font-size: 14px;
+    letter-spacing: 1px;
+    margin-top: 14px;
+}
+
+.album-viewer-close {
+    position: absolute;
+    top: 12px;
+    right: 20px;
+    z-index: 2;
+    background: none;
+    border: 0;
+    color: #fff;
+    font-size: 40px;
+    line-height: 1;
+    padding: 4px 12px;
+    cursor: pointer;
+    opacity: .8;
+}
+
+.album-nav {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    -webkit-transform: translateY(-50%);
+            transform: translateY(-50%);
+    background: rgba(255, 255, 255, .12);
+    border: 0;
+    color: #fff;
+    font-size: 22px;
+    line-height: 1;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    cursor: pointer;
+    -webkit-transition: background .3s;
+    transition: background .3s;
+}
+
+.album-nav:hover,
+.album-viewer-close:hover {
+    background: rgba(212, 176, 165, .85);
+    opacity: 1;
+}
+
+.album-prev {
+    left: 22px;
+}
+
+.album-next {
+    right: 22px;
+}
+
+@media (max-width: 767px) {
+    .album-nav {
+        width: 38px;
+        height: 38px;
+        font-size: 18px;
+    }
+
+    .album-prev {
+        left: 8px;
+    }
+
+    .album-next {
+        right: 8px;
+    }
+}
+
+/* =========================================================================
+   KHOẢNG CÁCH GIỮA CÁC MỤC
+   Theme để .section-padding là 120px trên và dưới, lại đặt thêm padding riêng
+   cho từng mục (couple 50, portfolio 100, event 90) nên khoảng cách giữa các
+   mục chênh nhau từ 55px tới 170px, nhìn chỗ hẫng chỗ sát.
+   Ở đây quy về một mức chung: mỗi mục cách nhau đúng 2 x --section-gap.
+   Muốn toàn trang thoáng hơn hay sát hơn, chỉ cần sửa 3 con số bên dưới.
+   ========================================================================= */
+:root {
+    --section-gap: 45px;          /* màn hình lớn   -> hai mục cách nhau 90px */
+    --section-gap-md: 35px;       /* máy tính bảng  -> 70px */
+    --section-gap-sm: 28px;       /* điện thoại     -> 56px */
+}
+
+.wpo-couple-section.section-padding,
+.wpo-portfolio-section-s2.section-padding,
+.wpo-event-section.section-padding,
+.wpo-rsvp-section.section-padding,
+.wpo-wishes-section.section-padding,
+.wpo-album-section.section-padding {
+    padding-top: var(--section-gap);
+    padding-bottom: var(--section-gap);
+}
+
+.wpo-thankyou-section {
+    background: #FDF8F6;
+    padding: var(--section-gap) 0;
+    border-top: 1px solid #F3E1DB;
+}
+
+/* Mục tên + đếm ngược + lịch: theme không cho padding nào nên nó dính sát
+   ảnh slider phía trên. */
+.wpo-wedding-date {
+    padding-top: var(--section-gap);
+    padding-bottom: var(--section-gap);
+}
+
+/* Tiêu đề mục cách nội dung 60px, quá rộng so với khoảng cách mới giữa các
+   mục. Kéo lại cho cân. */
+.wpo-section-title,
+.wpo-section-title-s2 {
+    margin-bottom: 40px;
+}
+
+@media (max-width: 767px) {
+    .wpo-section-title,
+    .wpo-section-title-s2 {
+        margin-bottom: 28px;
+    }
+}
+
+@media (max-width: 991px) {
+    .wpo-couple-section.section-padding,
+    .wpo-portfolio-section-s2.section-padding,
+    .wpo-event-section.section-padding,
+    .wpo-rsvp-section.section-padding,
+    .wpo-wishes-section.section-padding,
+    .wpo-album-section.section-padding {
+        padding-top: var(--section-gap-md);
+        padding-bottom: var(--section-gap-md);
+    }
+
+    .wpo-thankyou-section,
+    .wpo-wedding-date {
+        padding-top: var(--section-gap-md);
+        padding-bottom: var(--section-gap-md);
+    }
+}
+
+@media (max-width: 767px) {
+    .wpo-couple-section.section-padding,
+    .wpo-portfolio-section-s2.section-padding,
+    .wpo-event-section.section-padding,
+    .wpo-rsvp-section.section-padding,
+    .wpo-wishes-section.section-padding,
+    .wpo-album-section.section-padding {
+        padding-top: var(--section-gap-sm);
+        padding-bottom: var(--section-gap-sm);
+    }
+
+    .wpo-thankyou-section,
+    .wpo-wedding-date {
+        padding-top: var(--section-gap-sm);
+        padding-bottom: var(--section-gap-sm);
+    }
+}
+
+.wpo-thankyou-section .thankyou-title {
+    font-size: 50px;
+    color: #D4B0A5;
+    margin: 0 0 8px;
+}
+
+@media (max-width: 575px) {
+    .wpo-thankyou-section .thankyou-title {
+        font-size: 36px;
+    }
+}
+
+.wpo-thankyou-section .thankyou-names {
+    font-size: 24px;
+    color: #323232;
+    margin: 0 0 18px;
+}
+
+.wpo-thankyou-section .thankyou-text {
+    font-size: 16px;
+    line-height: 1.9em;
+    max-width: 620px;
+    /* Nâu ấm thay cho màu xám #848892 của theme: trên nền hồng nhạt này màu
+       xám chỉ đạt tương phản 3.4:1 nên chữ bị mờ. */
+    color: #6B5A52;
+    margin: 0 auto 28px;
+}
+
+.wpo-thankyou-section .theme-btn {
+    cursor: pointer;
+}
+
+/* ---------- Xác nhận tham dự (RSVP) ---------- */
+.wpo-rsvp-section {
+    background: #fff;
+}
+
+.wpo-section-title .rsvp-lead {
+    max-width: 620px;
+    margin: 20px auto 0;
+    font-size: 16px;
+    color: #848892;
+}
+
+.wpo-section-title .rsvp-lead span {
+    color: #D4B0A5;
+}
+
+/* Form RSVP dùng chung class .wishes-form vốn có margin-bottom 60px để tách
+   với danh sách lời chúc. Ở đây dưới form không có gì nên bỏ khoảng đó đi. */
+.wishes-form.rsvp-form {
+    margin-bottom: 0;
+}
+
+/* Dòng thông báo khi chưa có nội dung thì không chiếm chỗ */
+.rsvp-form .wishes-note:empty {
+    min-height: 0;
+    margin-top: 0;
+}
+
+.rsvp-form select {
+    width: 100%;
+    background: #FDF8F6;
+    border: 1px solid #F3E1DB;
+    color: #323232;
+    font-family: "Jost", sans-serif;
+    font-size: 16px;
+    padding: 14px 18px;
+    outline: none;
+    -webkit-appearance: none;
+       -moz-appearance: none;
+            appearance: none;
+    background-image: url(../images/select-icon.png);
+    background-repeat: no-repeat;
+    background-position: right 18px center;
+}
+
+.rsvp-form select:focus {
+    border-color: #D4B0A5;
+}
+
+.rsvp-choice {
+    background: #FDF8F6;
+    border: 1px solid #F3E1DB;
+    padding: 16px 18px;
+}
+
+.rsvp-choice .rsvp-label {
+    display: block;
+    font-size: 15px;
+    color: #939580;
+    margin-bottom: 10px;
+}
+
+.rsvp-choice label {
+    display: inline-block;
+    font-size: 16px;
+    color: #323232;
+    margin: 0 22px 0 0;
+    cursor: pointer;
+}
+
+.rsvp-choice input[type="radio"] {
+    margin-right: 6px;
+    accent-color: #D4B0A5;
+    vertical-align: middle;
+}
+
+@media (max-width: 575px) {
+    .rsvp-choice label {
+        display: block;
+        margin: 0 0 8px;
+    }
+}
+
+.rsvp-hint {
+    display: block;
+    font-size: 13px;
+    color: #939580;
+    margin-top: 6px;
+}
+
+/* ---------- Section lời chúc ---------- */
+.wpo-wishes-section {
+    background: #FDF8F6;
+}
+
+.wishes-form {
+    background: #fff;
+    border: 1px solid #F3E1DB;
+    padding: 40px 35px 30px;
+    margin-bottom: 60px;
+}
+
+@media (max-width: 575px) {
+    .wishes-form {
+        padding: 25px 20px 20px;
+        margin-bottom: 40px;
+    }
+}
+
+.wishes-form-row {
+    margin-bottom: 20px;
+}
+
+.wishes-form input,
+.wishes-form textarea {
+    width: 100%;
+    background: #FDF8F6;
+    border: 1px solid #F3E1DB;
+    color: #323232;
+    font-family: "Jost", sans-serif;
+    font-size: 16px;
+    padding: 14px 18px;
+    outline: none;
+    -webkit-transition: border-color .3s;
+    transition: border-color .3s;
+}
+
+.wishes-form input:focus,
+.wishes-form textarea:focus {
+    border-color: #D4B0A5;
+}
+
+.wishes-form textarea {
+    resize: vertical;
+    min-height: 110px;
+}
+
+.wishes-form .theme-btn {
+    cursor: pointer;
+    padding: 13px 45px;
+}
+
+.wishes-note {
+    font-size: 15px;
+    text-align: center;
+    margin: 15px 0 0;
+    min-height: 22px;
+    color: #939580;
+}
+
+.wishes-note.is-error {
+    color: #c0705c;
+}
+
+/* ---------- Danh sách lời chúc ---------- */
+.wishes-list {
+    display: -ms-grid;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.wish-card {
+    position: relative;
+    background: #fff;
+    border: 1px solid #F3E1DB;
+    padding: 28px 25px 22px;
+}
+
+.wish-card:before {
+    content: "\201C";
+    position: absolute;
+    top: 2px;
+    left: 18px;
+    font-size: 55px;
+    line-height: 1;
+    color: #F3E1DB;
+    font-family: Georgia, serif;
+}
+
+.wish-card .wish-message {
+    font-size: 16px;
+    line-height: 1.7em;
+    color: #848892;
+    margin: 0 0 15px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.wish-card .wish-name {
+    font-size: 17px;
+    color: #D4B0A5;
+    margin: 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.wish-card .wish-name:before {
+    content: "\2014\00a0";
+}
+
+.wish-card .wish-remove {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    background: none;
+    border: 0;
+    color: #d3c9c4;
+    font-size: 20px;
+    line-height: 1;
+    padding: 4px 6px;
+    cursor: pointer;
+}
+
+.wish-card .wish-remove:hover {
+    color: #c0705c;
+}
+
+.wishes-empty {
+    text-align: center;
+    color: #939580;
+}
+
+/* ---------- Popup mã QR ---------- */
+.gift-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100000;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    padding: 20px;
+}
+
+.gift-modal[hidden] {
+    display: none;
+}
+
+.gift-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(50, 50, 50, .65);
+}
+
+.gift-modal-box {
+    position: relative;
+    background: #fff;
+    border: 1px solid #F3E1DB;
+    width: 100%;
+    max-width: 420px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 35px 30px 30px;
+    text-align: center;
+    -webkit-animation: giftModalIn .3s ease-out;
+            animation: giftModalIn .3s ease-out;
+}
+
+@-webkit-keyframes giftModalIn {
+    from { opacity: 0; -webkit-transform: translateY(20px); transform: translateY(20px); }
+    to   { opacity: 1; -webkit-transform: translateY(0); transform: translateY(0); }
+}
+
+@keyframes giftModalIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.gift-modal-box h3 {
+    font-size: 30px;
+    margin: 0 0 12px;
+}
+
+.gift-modal-box .gift-intro {
+    font-size: 15px;
+    line-height: 1.7em;
+    margin: 0 0 22px;
+}
+
+.gift-modal-close {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: none;
+    border: 0;
+    font-size: 28px;
+    line-height: 1;
+    color: #b9b0ac;
+    cursor: pointer;
+    padding: 4px 8px;
+}
+
+.gift-modal-close:hover {
+    color: #D4B0A5;
+}
+
+.gift-qr {
+    display: inline-block;
+    border: 1px solid #F3E1DB;
+    padding: 10px;
+    margin-bottom: 22px;
+}
+
+.gift-qr img {
+    display: block;
+    width: 100%;
+    max-width: 280px;   /* đủ lớn để điện thoại quét được từ màn hình */
+    height: auto;
+}
+
+.gift-info {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    border-top: 1px solid #F3E1DB;
+}
+
+.gift-info li {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+    gap: 12px;
+    padding: 12px 2px;
+    border-bottom: 1px solid #F3E1DB;
+    font-size: 15px;
+}
+
+.gift-info li span {
+    color: #939580;
+    white-space: nowrap;
+}
+
+.gift-info li strong {
+    color: #323232;
+    font-weight: 500;
+    text-align: right;
+    word-break: break-all;
+}
+
+.gift-copy {
+    background: #D4B0A5;
+    color: #fff;
+    border: 0;
+    font-family: "Jost", sans-serif;
+    font-size: 13px;
+    padding: 7px 16px;
+    margin-top: 18px;
+    cursor: pointer;
+    -webkit-transition: opacity .3s;
+    transition: opacity .3s;
+}
+
+.gift-copy:hover {
+    opacity: .85;
+}
+
+body.gift-modal-open {
+    overflow: hidden;
+}

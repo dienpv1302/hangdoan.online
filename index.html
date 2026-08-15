@@ -30,6 +30,7 @@
     <link href="assets/css/odometer-theme-default.css" rel="stylesheet">
     <link href="assets/css/jquery-ui.css" rel="stylesheet">
     <link href="assets/sass/style.css" rel="stylesheet">
+    <link href="assets/css/wedding-custom.css" rel="stylesheet">
     <style>
         /* Thiết lập giao diện cho nút tạm dừng và play */
         .tdk-music {
@@ -209,7 +210,9 @@
                                     <ul class="nav navbar-nav mb-2 mb-lg-0">
                                         <li><a href="index.html#gallery">Gallery</a></li>
                                         <li><a href="index.html#event">Event</a></li>
-                                        
+                                        <li><a href="index.html#rsvp">Xác nhận</a></li>
+                                        <li><a href="index.html#wishes">Lời chúc</a></li>
+
                                     </ul>
 
                                 </div><!-- end of nav-collapse -->
@@ -256,12 +259,18 @@
                     Minh Đoán & Thuý Hằng
                     <span class="shape-2"><img src="assets/images/slider/shape2.png" alt=""> </span>
                 </h2>
-                <p class="wow fadeInUp" data-wow-duration="1200ms">Hôn lễ được tổ chức vào ngày 24 tháng 09 năm 2026</p>
+                <p class="wow fadeInUp" data-wow-duration="1200ms">Hôn lễ được tổ chức vào ngày 20 tháng 12 năm 2026</p>
                 <div class="row wow fadeInUp" data-wow-duration="1400ms">
                     <div class="col col-xs-12">
                         <div class="clock-grids">
-                            <div id="clock" data-date="2026/09/24 11:00"></div>
+                            <div id="clock" data-date="2026/12/20 11:30"></div>
                         </div>
+                    </div>
+                </div>
+                <div class="row wow fadeInUp" data-wow-duration="1600ms">
+                    <div class="col col-xs-12">
+                        <!-- Bảng lịch tự dựng từ WEDDING_DAY trong wedding-config.js -->
+                        <div class="wedding-calendar" id="wedding-calendar"></div>
                     </div>
                 </div>
             </div> <!-- end container -->
@@ -279,6 +288,7 @@
                                 </div>
                                 <div class="couple-text">
                                     <h3>Minh Đoán</h3>
+                                    <p class="couple-intro" id="groom-intro"></p>
                                 </div>
                             </div>
                         </div>
@@ -295,7 +305,8 @@
                                     <img src="assets/images/couple/CoDau.jpg" alt="" style="max-width: 400px; max-height: 400px;">
                                 </div>
                                 <div class="couple-text">
-                                    <h3>Thuý Hằng</h3>                                   
+                                    <h3>Thuý Hằng</h3>
+                                    <p class="couple-intro" id="bride-intro"></p>
                                 </div>
                             </div>
                         </div>
@@ -307,11 +318,13 @@
         
         <!-- end story-section -->
         <!-- start wpo-portfolio-section -->
-        <section class="wpo-portfolio-section-s2 pb-0 section-padding" id="gallery">
+        <section class="wpo-portfolio-section-s2 section-padding" id="gallery">
             <div class="container">
                 <div class="wpo-section-title">
-                    <h4><a href="https://photos.app.goo.gl/itR26jXCSneDteoV9" style="color: #939580;">Sweet Memories</a></h4>
+                    <h4><a href="gallery.html" style="color: #939580;">Sweet Memories</a></h4>
                     <h2>Ảnh cưới</h2>
+                    <p class="gallery-quote">Được ai đó yêu sâu sắc sẽ mang lại cho bạn sức mạnh,
+                        trong khi yêu ai đó sâu sắc sẽ cho bạn dũng khí.</p>
                 </div>
                 <div class="sortable-gallery">
                     <div class="gallery-filters"></div>
@@ -332,7 +345,7 @@
 
                                 <div class="grid">
                                     <div class="img-holder">
-                                        <a href="assets/images/portfolio/1.jpg" class="fancybox"
+                                        <a href="assets/images/portfolio/2.jpg" class="fancybox"
                                             data-fancybox-group="gall-1">
                                             <img src="assets/images/portfolio/2.jpg" alt class="img img-responsive">
                                             <div class="hover-content">
@@ -370,14 +383,16 @@
                         </div>
                     </div>
                 </div>
-                
+                <div class="gallery-more text-center">
+                    <a class="theme-btn" href="gallery.html">Tất cả hình ảnh</a>
+                </div>
             </div> <!-- end container -->
         </section>
         <!-- end wpo-portfolio-section -->
 
 
         <!-- start wpo-event-section -->
-        <section class="wpo-event-section section-padding pb-0" id="event">
+        <section class="wpo-event-section section-padding" id="event">
             <div class="container">
                 <div class="wpo-section-title">
                     <h4>Our Wedding</h4>
@@ -392,10 +407,12 @@
                                 </div>
                                 <div class="wpo-event-text">
                                     <ul>
-                                        <li>10 giờ 00 Thứ Bảy <br/> 23.09.2026</li>
+                                        <li>10 giờ 00 Thứ Bảy <br/> 19.12.2026</li>
                                         <li>Tư Gia Nhà Gái</li>
-                                        <li>Xóm Bắc Bồi, Xã Hải Minh, Huyện Hải Hậu, Tỉnh Nam Định</li>
-                                        <li> <a target="_blank" href="https://maps.app.goo.gl/AHfvJBQJt8uPPumu7">Xem địa chỉ</a></li>
+                                        <li><a target="_blank" rel="noopener" data-map="nha-gai"
+                                                href="https://www.google.com/maps/search/?api=1&amp;query=20.2488723,106.2575322">Xóm Bắc Bồi, Xã Hải Minh, Huyện Hải Hậu, Tỉnh Nam Định</a></li>
+                                        <li> <a target="_blank" rel="noopener" data-map="nha-gai"
+                                                href="https://www.google.com/maps/search/?api=1&amp;query=20.2488723,106.2575322">Xem địa chỉ</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -408,11 +425,12 @@
                                 </div>
                                 <div class="wpo-event-text">
                                     <ul>
-                                        <li>11 giờ 30 Chủ Nhật 
-                                            <br/>24.09.2026</li>
+                                        <li>11 giờ 30 Chủ Nhật
+                                            <br/>20.12.2026</li>
                                         <li>Tư Gia Nhà Trai</li>
-                                        <li>Xóm 32, Xã Hải Minh, Huyện Hải Hậu, Tỉnh Nam Định</li> 
-                                        <li> <a target="_blank"
+                                        <li><a target="_blank" rel="noopener" data-map="nha-trai"
+                                                href="https://maps.app.goo.gl/AHfvJBQJt8uPPumu7">Xóm 32, Xã Hải Minh, Huyện Hải Hậu, Tỉnh Nam Định</a></li>
+                                        <li> <a target="_blank" rel="noopener" data-map="nha-trai"
                                                 href="https://maps.app.goo.gl/AHfvJBQJt8uPPumu7">Xem địa chỉ</a></li>
                                     </ul>
                                 </div>
@@ -425,11 +443,12 @@
                                 </div>
                                 <div class="wpo-event-text">
                                     <ul>
-                                        <li>12 giờ 00 Chủ Nhật 
-                                            <br/>24.09.2026</li>
+                                        <li>11 giờ 30 Chủ Nhật
+                                            <br/>20.12.2026</li>
                                         <li>Tư Gia Nhà Trai</li>
-                                        <li>Xóm 32, Xã Hải Minh, Huyện Hải Hậu, Tỉnh Nam Định</li> 
-                                        <li> <a target="_blank"
+                                        <li><a target="_blank" rel="noopener" data-map="nha-trai"
+                                                href="https://maps.app.goo.gl/AHfvJBQJt8uPPumu7">Xóm 32, Xã Hải Minh, Huyện Hải Hậu, Tỉnh Nam Định</a></li>
+                                        <li> <a target="_blank" rel="noopener" data-map="nha-trai"
                                                 href="https://maps.app.goo.gl/AHfvJBQJt8uPPumu7">Xem địa chỉ</a></li>
                                     </ul>
                                 </div>
@@ -441,17 +460,105 @@
             </div> <!-- end container -->
         </section>
         <!-- end wpo-event-section -->
-        <div class="wpo-site-footer text-center" >
+
+        <!-- start wpo-rsvp-section -->
+        <section class="wpo-rsvp-section section-padding" id="rsvp">
             <div class="container">
+                <div class="wpo-section-title">
+                    <h4>Save the date</h4>
+                    <h2>Xác nhận tham dự</h2>
+                    <p class="rsvp-lead">Bạn phản hồi giúp chúng mình <span id="rsvp-deadline"></span>
+                        để gia đình tiện chuẩn bị đón tiếp chu đáo nhé.</p>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 col-12">
+                        <form class="wishes-form rsvp-form" id="rsvp-form" novalidate>
+                            <div class="wishes-form-row">
+                                <input type="text" id="rsvp-name" maxlength="60" autocomplete="name"
+                                    placeholder="Họ và tên của bạn">
+                            </div>
+                            <div class="wishes-form-row">
+                                <input type="tel" id="rsvp-phone" maxlength="20" autocomplete="tel"
+                                    placeholder="Số điện thoại (không bắt buộc)">
+                            </div>
+                            <div class="wishes-form-row rsvp-choice">
+                                <span class="rsvp-label">Bạn có tới chung vui được không?</span>
+                                <label><input type="radio" name="attend" value="Có"> Mình sẽ tới</label>
+                                <label><input type="radio" name="attend" value="Không"> Tiếc quá, mình bận mất rồi</label>
+                            </div>
+                            <div class="wishes-form-row" id="rsvp-transport-row">
+                                <select id="rsvp-transport">
+                                    <option value="">Bạn đi bằng phương tiện gì?</option>
+                                </select>
+                                <span class="rsvp-hint">Xe tuyến đón khách tại số 3 Lê Quang Đạo</span>
+                            </div>
+                            <div class="wishes-form-row">
+                                <textarea id="rsvp-message" rows="2" maxlength="300"
+                                    placeholder="Lời nhắn tới gia đình (không bắt buộc)"></textarea>
+                            </div>
+                            <div class="wishes-form-row text-center">
+                                <button type="submit" class="theme-btn">Gửi xác nhận</button>
+                            </div>
+                            <p class="wishes-note" id="rsvp-note" role="status" aria-live="polite"></p>
+                        </form>
+                    </div>
+                </div>
+            </div> <!-- end container -->
+        </section>
+        <!-- end wpo-rsvp-section -->
+
+        <!-- start wpo-wishes-section -->
+        <section class="wpo-wishes-section section-padding" id="wishes">
+            <div class="container">
+                <div class="wpo-section-title">
+                    <h4>Best Wishes</h4>
+                    <h2>Lời chúc</h2>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 col-12">
+                        <form class="wishes-form" id="wishes-form" novalidate>
+                            <div class="wishes-form-row">
+                                <input type="text" id="wish-name" maxlength="40" placeholder="Tên của bạn"
+                                    autocomplete="name">
+                            </div>
+                            <div class="wishes-form-row">
+                                <textarea id="wish-message" rows="3" maxlength="300"
+                                    placeholder="Gửi lời chúc tới cô dâu chú rể..."></textarea>
+                            </div>
+                            <div class="wishes-form-row text-center">
+                                <button type="submit" class="theme-btn">Gửi lời chúc</button>
+                            </div>
+                            <p class="wishes-note" id="wishes-note" role="status" aria-live="polite"></p>
+                        </form>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-12">
-                        <div class="footer-image">
-                            <a class="logo" href="index.html"><img src="assets/images/qr.png" alt="" style="max-width: 200px; display: none;"></a>
-                        </div>
+                        <div class="wishes-list" id="wishes-list"></div>
+                    </div>
+                </div>
+            </div> <!-- end container -->
+        </section>
+        <!-- end wpo-wishes-section -->
+
+        <!-- start wpo-thankyou-section: lời cảm ơn + hộp mừng cưới gộp làm một -->
+        <section class="wpo-thankyou-section">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 col-12 text-center">
+                        <h2 class="thankyou-title">Thank you!</h2>
+                        <p class="thankyou-names">Minh Đoán &amp; Thuý Hằng</p>
+                        <p class="thankyou-text">Cảm ơn bạn đã dành thời gian ghé thăm và gửi lời chúc
+                            tới chúng mình. Sự hiện diện cùng những lời chúc phúc của bạn là món quà
+                            ý nghĩa nhất trong ngày trọng đại này. Nếu ở xa không tới dự được, bạn có
+                            thể gửi tình cảm tới chúng mình qua mã QR nhé!</p>
+                        <button type="button" class="theme-btn" id="gift-open">Mừng cưới ♥</button>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
+        <!-- end wpo-thankyou-section -->
     </div>
     <!-- end of page-wrapper -->
     <div class="snowflakes" aria-hidden="true">
@@ -546,6 +653,26 @@
 
 
         </style></div>
+    <!-- start popup mã QR mừng cưới -->
+    <div class="gift-modal" id="gift-modal" role="dialog" aria-modal="true" aria-labelledby="gift-modal-title" hidden>
+        <div class="gift-modal-overlay" data-gift-close></div>
+        <div class="gift-modal-box">
+            <button type="button" class="gift-modal-close" data-gift-close aria-label="Đóng">&times;</button>
+            <h3 id="gift-modal-title">Hộp mừng cưới</h3>
+            <p class="gift-intro" id="gift-modal-intro"></p>
+            <div class="gift-qr">
+                <img id="gift-qr-img" src="assets/images/QR.jpg" alt="Mã QR mừng cưới">
+            </div>
+            <ul class="gift-info">
+                <li id="gift-row-bank"><span>Ngân hàng</span><strong id="gift-bank"></strong></li>
+                <li id="gift-row-owner"><span>Chủ tài khoản</span><strong id="gift-owner"></strong></li>
+                <li id="gift-row-account"><span>Số tài khoản</span><strong id="gift-account"></strong></li>
+            </ul>
+            <button type="button" class="gift-copy" id="gift-copy">Sao chép số tài khoản</button>
+        </div>
+    </div>
+    <!-- end popup mã QR mừng cưới -->
+
     <!-- All JavaScript files
     ================================================== -->
     <script src="assets/js/jquery.min.js"></script>
@@ -556,6 +683,9 @@
     <script src="assets/js/jquery-plugin-collection.js"></script>
     <!-- Custom script for this template -->
     <script src="assets/js/script.js"></script>
+    <!-- Cấu hình đám cưới (link maps, thông tin mừng cưới, lời chúc mẫu) -->
+    <script src="assets/js/wedding-config.js"></script>
+    <script src="assets/js/wedding-custom.js"></script>
 
 </body>
 

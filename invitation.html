@@ -35,6 +35,7 @@
     <link href="assets/css/odometer-theme-default.css" rel="stylesheet">
     <link href="assets/css/jquery-ui.css" rel="stylesheet">
     <link href="assets/sass/style.css" rel="stylesheet">
+    <link href="assets/css/wedding-custom.css" rel="stylesheet">
 </head>
 
 <body>
@@ -85,6 +86,8 @@
                                     <ul class="nav navbar-nav mb-2 mb-lg-0">
                                         <li><a href="index.html#story">Story</a></li>
                                         <li><a href="index.html#gallery">Gallery</a></li>
+                                        <li><a href="index.html#rsvp">Xác nhận</a></li>
+                                        <li><a href="index.html#wishes">Lời chúc</a></li>
                                     </ul>
 
                                 </div><!-- end of nav-collapse -->
@@ -105,14 +108,17 @@
                                 <div class="wpo-event-item wow zoomIn" data-wow-duration="1500ms">
                                     <div class="wpo-event-text">
                                         <h2>Minh Đoán & Thuý Hằng</h2>
-                                        <p>Lễ Thành Hôn được tổ chức vào ngày 24 tháng 09 năm 2026</p>
+                                        <p>Lễ Thành Hôn được tổ chức vào ngày 20 tháng 12 năm 2026</p>
                                         <ul>
-                                            <li>Chủ Nhật, 24.09.2026 <br />
-                                                11:30 PM </li>
+                                            <li>Chủ Nhật, 20.12.2026 <br />
+                                                11 giờ 30 </li>
                                             <li>Tư Gia Nhà Trai</li>
-                                            <li>Xóm 32, Xã Hải Anh, Tỉnh Ninh Bình</li> 
-                                            <li> <a target="_blank" href="https://maps.app.goo.gl/AHfvJBQJt8uPPumu7">Xem địa chỉ</a></li>                                           
+                                            <li><a target="_blank" rel="noopener" data-map="nha-trai"
+                                                    href="https://maps.app.goo.gl/AHfvJBQJt8uPPumu7">Xóm 32, Xã Hải Anh, Tỉnh Ninh Bình</a></li>
+                                            <li> <a target="_blank" rel="noopener" data-map="nha-trai"
+                                                    href="https://maps.app.goo.gl/AHfvJBQJt8uPPumu7">Xem địa chỉ</a></li>
                                         </ul>
+                                        <button type="button" class="theme-btn" id="gift-open">Mừng cưới ♥</button>
                                     </div>
                                 </div>
                             </div>
@@ -126,6 +132,26 @@
     </div>
     <!-- end of page-wrapper -->
 
+    <!-- start popup mã QR mừng cưới -->
+    <div class="gift-modal" id="gift-modal" role="dialog" aria-modal="true" aria-labelledby="gift-modal-title" hidden>
+        <div class="gift-modal-overlay" data-gift-close></div>
+        <div class="gift-modal-box">
+            <button type="button" class="gift-modal-close" data-gift-close aria-label="Đóng">&times;</button>
+            <h3 id="gift-modal-title">Hộp mừng cưới</h3>
+            <p class="gift-intro" id="gift-modal-intro"></p>
+            <div class="gift-qr">
+                <img id="gift-qr-img" src="assets/images/QR.jpg" alt="Mã QR mừng cưới">
+            </div>
+            <ul class="gift-info">
+                <li id="gift-row-bank"><span>Ngân hàng</span><strong id="gift-bank"></strong></li>
+                <li id="gift-row-owner"><span>Chủ tài khoản</span><strong id="gift-owner"></strong></li>
+                <li id="gift-row-account"><span>Số tài khoản</span><strong id="gift-account"></strong></li>
+            </ul>
+            <button type="button" class="gift-copy" id="gift-copy">Sao chép số tài khoản</button>
+        </div>
+    </div>
+    <!-- end popup mã QR mừng cưới -->
+
     <!-- All JavaScript files
     ================================================== -->
     <script src="assets/js/jquery.min.js"></script>
@@ -136,6 +162,9 @@
     <script src="assets/js/jquery-plugin-collection.js"></script>
     <!-- Custom script for this template -->
     <script src="assets/js/script.js"></script>
+    <!-- Cấu hình đám cưới (link maps, thông tin mừng cưới, lời chúc mẫu) -->
+    <script src="assets/js/wedding-config.js"></script>
+    <script src="assets/js/wedding-custom.js"></script>
 </body>
 
 
