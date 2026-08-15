@@ -284,7 +284,7 @@
                         <div class="col col-md-5 col-12">
                             <div class="couple-item wow fadeInLeftSlow" data-wow-duration="1700ms">
                                 <div class="couple-img">
-                                    <img src="assets/images/couple/ChuRe.jpg" alt="" style="max-width: 400px; max-height: 400px;">
+                                    <img src="assets/images/couple/ChuRe.jpg" alt="Chú rể Minh Đoán">
                                 </div>
                                 <div class="couple-text">
                                     <h3>Minh Đoán</h3>
@@ -302,7 +302,7 @@
                         <div class="col col-md-5 col-12">
                             <div class="couple-item wow fadeInRightSlow" data-wow-duration="1700ms">
                                 <div class="couple-img">
-                                    <img src="assets/images/couple/CoDau.jpg" alt="" style="max-width: 400px; max-height: 400px;">
+                                    <img src="assets/images/couple/CoDau.jpg" alt="Cô dâu Thuý Hằng">
                                 </div>
                                 <div class="couple-text">
                                     <h3>Thuý Hằng</h3>
@@ -330,55 +330,52 @@
                     <div class="gallery-filters"></div>
                     <div class="row">
                         <div class="col-lg-12">
-                            <div class="portfolio-grids gallery-container clearfix">                                
+                            <!-- 4 ô ảnh, mỗi ô gắn một nhóm phông nền trong WEDDING_PREVIEW.
+                                 Ảnh do wedding-custom.js đổ vào và tự đổi theo thời gian. -->
+                            <div class="portfolio-grids gallery-container clearfix">
                                 <div class="grid">
                                     <div class="img-holder">
-                                        <a href="assets/images/portfolio/1.jpg" class="fancybox"
-                                            data-fancybox-group="gall-1">
-                                            <img src="assets/images/portfolio/1.jpg" alt class="img img-responsive">
-                                            <div class="hover-content">
+                                        <button type="button" class="preview-item" data-slot="0">
+                                            <img alt="Ảnh cưới" class="img img-responsive">
+                                            <span class="hover-content">
                                                 <i class="ti-plus"></i>
-                                            </div>
-                                        </a>
+                                            </span>
+                                        </button>
                                     </div>
                                 </div>
 
                                 <div class="grid">
                                     <div class="img-holder">
-                                        <a href="assets/images/portfolio/2.jpg" class="fancybox"
-                                            data-fancybox-group="gall-1">
-                                            <img src="assets/images/portfolio/2.jpg" alt class="img img-responsive">
-                                            <div class="hover-content">
+                                        <button type="button" class="preview-item" data-slot="1">
+                                            <img alt="Ảnh cưới" class="img img-responsive">
+                                            <span class="hover-content">
                                                 <i class="ti-plus"></i>
-                                            </div>
-                                        </a>
+                                            </span>
+                                        </button>
                                     </div>
                                 </div>
 
                                 <div class="grid">
                                     <div class="img-holder">
-                                        <a href="assets/images/portfolio/3.jpg" class="fancybox"
-                                            data-fancybox-group="gall-1">
-                                            <img src="assets/images/portfolio/3.jpg" alt class="img img-responsive">
-                                            <div class="hover-content">
+                                        <button type="button" class="preview-item" data-slot="2">
+                                            <img alt="Ảnh cưới" class="img img-responsive">
+                                            <span class="hover-content">
                                                 <i class="ti-plus"></i>
-                                            </div>
-                                        </a>
+                                            </span>
+                                        </button>
                                     </div>
                                 </div>
-                                
-                                
+
                                 <div class="grid">
                                     <div class="img-holder">
-                                        <a href="assets/images/portfolio/4.jpg" class="fancybox"
-                                            data-fancybox-group="gall-1">
-                                            <img src="assets/images/portfolio/4.jpg" alt class="img img-responsive">
-                                            <div class="hover-content">
+                                        <button type="button" class="preview-item" data-slot="3">
+                                            <img alt="Ảnh cưới" class="img img-responsive">
+                                            <span class="hover-content">
                                                 <i class="ti-plus"></i>
-                                            </div>
-                                        </a>
+                                            </span>
+                                        </button>
                                     </div>
-                                </div>                                
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -653,6 +650,19 @@
 
 
         </style></div>
+    <!-- start khung xem ảnh phóng to (dùng cho 4 ảnh xem trước) -->
+    <div class="album-viewer" id="album-viewer" role="dialog" aria-modal="true" aria-label="Xem ảnh cưới" hidden>
+        <div class="album-viewer-overlay" data-album="close"></div>
+        <button type="button" class="album-viewer-close" data-album="close" aria-label="Đóng">&times;</button>
+        <button type="button" class="album-nav album-prev" data-album="prev" aria-label="Ảnh trước">&#10094;</button>
+        <button type="button" class="album-nav album-next" data-album="next" aria-label="Ảnh sau">&#10095;</button>
+        <figure class="album-viewer-figure">
+            <img id="album-viewer-img" alt="">
+            <figcaption id="album-counter"></figcaption>
+        </figure>
+    </div>
+    <!-- end khung xem ảnh phóng to -->
+
     <!-- start popup mã QR mừng cưới -->
     <div class="gift-modal" id="gift-modal" role="dialog" aria-modal="true" aria-labelledby="gift-modal-title" hidden>
         <div class="gift-modal-overlay" data-gift-close></div>

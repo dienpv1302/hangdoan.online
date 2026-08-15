@@ -163,56 +163,29 @@
     /* ---------------------------------------------------------------
        4. Album ảnh cưới + khung xem ảnh phóng to
        --------------------------------------------------------------- */
-    function initAlbum() {
-        var grid = document.getElementById('album-grid');
-        if (!grid || typeof WEDDING_ALBUM === 'undefined') return;
-
-        var photos = WEDDING_ALBUM.photos || [];
-        var thumbDir = WEDDING_ALBUM.thumbDir || '';
-        var largeDir = WEDDING_ALBUM.largeDir || '';
+    // Khung xem ảnh phóng to, dùng chung cho trang album và 4 ảnh xem trước
+    var viewerApi = null;
+    function getViewer() {
+        if (viewerApi !== null) return viewerApi;
 
         var box = document.getElementById('album-viewer');
         var viewerImg = document.getElementById('album-viewer-img');
+        if (!box || !viewerImg) { viewerApi = false; return false; }
+
         var counter = document.getElementById('album-counter');
+        var list = [];
+        var dir = '';
         var current = -1;
 
-        // Dựng lưới ảnh
-        for (var i = 0; i < photos.length; i++) {
-            var item = document.createElement('button');
-            item.type = 'button';
-            item.className = 'album-item';
-            item.setAttribute('data-index', i);
-            item.setAttribute('aria-label', 'Xem ảnh ' + (i + 1));
-
-            var img = document.createElement('img');
-            img.src = thumbDir + photos[i];
-            img.alt = 'Ảnh cưới ' + (i + 1);
-            img.loading = 'lazy';          // chỉ tải khi cuộn tới
-            img.decoding = 'async';
-
-            item.appendChild(img);
-            grid.appendChild(item);
-        }
-
-        var total = document.getElementById('album-total');
-        if (total) total.textContent = photos.length;
-
-        if (!box || !viewerImg) return;
-
         function show(index) {
-            if (index < 0) index = photos.length - 1;
-            if (index >= photos.length) index = 0;
+            if (!list.length) return;
+            if (index < 0) index = list.length - 1;
+            if (index >= list.length) index = 0;
             current = index;
 
-            viewerImg.src = largeDir + photos[current];
+            viewerImg.src = dir + list[current];
             viewerImg.alt = 'Ảnh cưới ' + (current + 1);
-            if (counter) counter.textContent = (current + 1) + ' / ' + photos.length;
-        }
-
-        function open(index) {
-            show(index);
-            box.hidden = false;
-            document.body.classList.add('gift-modal-open');
+            if (counter) counter.textContent = (current + 1) + ' / ' + list.length;
         }
 
         function close() {
@@ -220,12 +193,6 @@
             viewerImg.removeAttribute('src');   // ngừng tải ảnh khi đã đóng
             document.body.classList.remove('gift-modal-open');
         }
-
-        grid.addEventListener('click', function (e) {
-            var item = e.target.closest ? e.target.closest('.album-item') : null;
-            if (!item) return;
-            open(parseInt(item.getAttribute('data-index'), 10) || 0);
-        });
 
         box.addEventListener('click', function (e) {
             var action = e.target.getAttribute('data-album');
@@ -254,6 +221,249 @@
             else if (delta < -50) show(current + 1);
             touchX = null;
         }, { passive: true });
+
+        viewerApi = {
+            open: function (photos, largeDir, index) {
+                list = photos;
+                dir = largeDir;
+                show(index);
+                box.hidden = false;
+                document.body.classList.add('gift-modal-open');
+            }
+        };
+        return viewerApi;
+    }
+
+    function initAlbum() {
+        var grid = document.getElementById('album-grid');
+        if (!grid || typeof WEDDING_ALBUM === 'undefined') return;
+
+        var photos = WEDDING_ALBUM.photos || [];
+        var thumbDir = WEDDING_ALBUM.thumbDir || '';
+        var largeDir = WEDDING_ALBUM.largeDir || '';
+
+        for (var i = 0; i < photos.length; i++) {
+            var item = document.createElement('button');
+            item.type = 'button';
+            item.className = 'album-item';
+            item.setAttribute('data-index', i);
+            item.setAttribute('aria-label', 'Xem ảnh ' + (i + 1));
+
+            var img = document.createElement('img');
+            img.src = thumbDir + photos[i];
+            img.alt = 'Ảnh cưới ' + (i + 1);
+            img.loading = 'lazy';          // chỉ tải khi cuộn tới
+            img.decoding = 'async';
+
+            item.appendChild(img);
+            grid.appendChild(item);
+        }
+
+        var total = document.getElementById('album-total');
+        if (total) total.textContent = photos.length;
+
+        grid.addEventListener('click', function (e) {
+            var item = e.target.closest ? e.target.closest('.album-item') : null;
+            if (!item) return;
+            var viewer = getViewer();
+            if (viewer) {
+                viewer.open(photos, largeDir, parseInt(item.getAttribute('data-index'), 10) || 0);
+            }
+        });
+    }
+
+    /* ---------------------------------------------------------------
+       4b. Bốn ảnh xem trước ở trang chủ, tự đổi theo thời gian
+       Mỗi ô gắn cứng với một nhóm phông nền nên lúc nào cũng đủ 4 phông
+       khác nhau; cứ tới lượt thì một ô đổi sang ảnh khác cùng nhóm.
+       --------------------------------------------------------------- */
+    function initPreview() {
+        var slots = document.querySelectorAll('.preview-item');
+        if (!slots.length) return;
+        if (typeof WEDDING_PREVIEW === 'undefined' || typeof WEDDING_ALBUM === 'undefined') return;
+
+        var groups = WEDDING_PREVIEW.groups || [];
+        if (!groups.length) return;
+
+        var thumbDir = WEDDING_ALBUM.thumbDir || '';
+        var largeDir = WEDDING_ALBUM.largeDir || '';
+        var order = [];         // ô thứ i đang giữ nhóm phông nền nào
+        var showing = [];       // tên ảnh đang hiện ở từng ô
+        var layers = [];        // hai lớp ảnh chồng nhau của từng ô
+
+        // Mỗi nhóm nhớ lại mấy tấm vừa hiện để không bị lặp lại sớm
+        var recent = [];
+        var RECENT_KEEP = 3;
+
+        function pickFresh(groupIndex, avoid) {
+            var group = groups[groupIndex];
+            var photos = (group && group.photos) || [];
+            if (!photos.length) return null;
+            if (photos.length === 1) return photos[0];
+
+            if (!recent[groupIndex]) recent[groupIndex] = [];
+            var used = recent[groupIndex];
+
+            // Ưu tiên những tấm chưa dùng trong vài lượt gần đây
+            var pool = [];
+            for (var i = 0; i < photos.length; i++) {
+                if (used.indexOf(photos[i]) === -1) pool.push(photos[i]);
+            }
+
+            // Hết ảnh mới thì xóa lịch sử, chỉ cần khác tấm đang hiện
+            if (!pool.length) {
+                recent[groupIndex] = [];
+                for (var j = 0; j < photos.length; j++) {
+                    if (photos[j] !== avoid) pool.push(photos[j]);
+                }
+            }
+            if (!pool.length) pool = photos;
+
+            var name = pool[Math.floor(Math.random() * pool.length)];
+            recent[groupIndex].push(name);
+            while (recent[groupIndex].length > RECENT_KEEP) recent[groupIndex].shift();
+            return name;
+        }
+
+        // Mỗi ô có hai thẻ ảnh chồng lên nhau. Đổi ảnh bằng cách nạp ảnh mới
+        // vào lớp đang ẩn rồi cho nó hiện dần đè lên lớp cũ (cross-fade),
+        // nên không bao giờ thấy khoảng trống giữa hai ảnh.
+        function setupLayers(idx) {
+            var first = slots[idx].querySelector('img');
+            if (!first) return null;
+
+            var second = first.cloneNode(false);
+            second.removeAttribute('src');
+            second.style.opacity = '0';
+            first.style.opacity = '1';
+            first.parentNode.insertBefore(second, first.nextSibling);
+
+            return { imgs: [first, second], front: 0 };
+        }
+
+        function applyPhoto(idx, animate) {
+            var pair = layers[idx];
+            var group = groups[order[idx]];
+            var name = showing[idx];
+            if (!pair || !group || !name) return;
+
+            slots[idx].setAttribute('data-group', order[idx]);
+
+            var current = pair.imgs[pair.front];
+            var next = pair.imgs[1 - pair.front];
+            var url = thumbDir + name;
+            var label = 'Ảnh cưới - ' + (group.name || '');
+
+            if (!animate) {
+                current.src = url;
+                current.alt = label;
+                return;
+            }
+
+            var swap = function () {
+                next.alt = label;
+                next.style.opacity = '1';
+                current.style.opacity = '0';
+                pair.front = 1 - pair.front;
+            };
+
+            var loader = new Image();
+            loader.onload = function () {
+                next.src = url;
+                // đợi trình duyệt vẽ xong ảnh mới rồi mới bắt đầu chuyển
+                if (window.requestAnimationFrame) {
+                    window.requestAnimationFrame(function () {
+                        window.requestAnimationFrame(swap);
+                    });
+                } else {
+                    setTimeout(swap, 30);
+                }
+            };
+            loader.onerror = function () { next.src = url; swap(); };
+            loader.src = url;
+        }
+
+        // Khởi đầu: xáo thứ tự các nhóm rồi rải vào 4 ô
+        for (var g = 0; g < groups.length; g++) order.push(g);
+        for (var k = order.length - 1; k > 0; k--) {
+            var j = Math.floor(Math.random() * (k + 1));
+            var tmp = order[k]; order[k] = order[j]; order[j] = tmp;
+        }
+
+        for (var i = 0; i < slots.length; i++) {
+            if (i >= order.length) order[i] = order[i % groups.length];
+            var grp = groups[order[i]];
+            if (!grp || !grp.photos || !grp.photos.length) continue;
+
+            layers[i] = setupLayers(i);
+            showing[i] = pickFresh(order[i], null);
+            applyPhoto(i, false);
+        }
+
+        // Bấm vào ô thì mở khung xem lớn với đúng nhóm ảnh đang ở ô đó
+        for (var sIdx = 0; sIdx < slots.length; sIdx++) {
+            (function (idx) {
+                slots[idx].addEventListener('click', function () {
+                    var grp = groups[order[idx]];
+                    var photos = (grp && grp.photos) || [];
+                    if (!photos.length) return;
+
+                    var pos = photos.indexOf(showing[idx]);
+                    var viewer = getViewer();
+                    if (viewer) viewer.open(photos, largeDir, pos < 0 ? 0 : pos);
+                });
+            })(sIdx);
+        }
+
+        var interval = WEDDING_PREVIEW.interval;
+        if (!interval || interval < 500) return;   // đặt 0 để tắt tự đổi
+
+        // Mỗi lượt: chọn ngẫu nhiên một nhóm ô rồi đảo vị trí của chúng cho nhau
+        // (phông nền đi theo ảnh sang ô mới), đồng thời một ô trong số đó đổi
+        // hẳn sang ảnh khác cùng phông. Số ô mỗi lượt thay đổi ngẫu nhiên nên
+        // nhìn không bị đều đặn máy móc.
+        function shuffleArray(arr) {
+            for (var i = arr.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+            }
+            return arr;
+        }
+
+        setInterval(function () {
+            if (slots.length < 2) return;
+
+            // Chọn ngẫu nhiên 2 tới 4 ô
+            var pool = [];
+            for (var i = 0; i < slots.length; i++) pool.push(i);
+            shuffleArray(pool);
+
+            var count = 2 + Math.floor(Math.random() * (slots.length - 1));
+            var chosen = pool.slice(0, count);
+
+            // Đảo vị trí các phông nền giữa những ô đó
+            var packs = [];
+            for (var c = 0; c < chosen.length; c++) packs.push(order[chosen[c]]);
+
+            var before = packs.slice();
+            shuffleArray(packs);
+
+            var moved = false;
+            for (var m = 0; m < packs.length; m++) {
+                if (packs[m] !== before[m]) { moved = true; break; }
+            }
+            if (!moved && packs.length > 1) {
+                var sw = packs[0]; packs[0] = packs[1]; packs[1] = sw;
+            }
+
+            // Mọi ô được chọn đều lấy ảnh MỚI, không phải bê ảnh cũ sang ô khác
+            for (var t = 0; t < chosen.length; t++) {
+                var slot = chosen[t];
+                order[slot] = packs[t];
+                showing[slot] = pickFresh(packs[t], showing[slot]);
+                applyPhoto(slot, true);
+            }
+        }, interval);
     }
 
     /* ---------------------------------------------------------------
@@ -608,6 +818,7 @@
         initCalendar();
         initIntro();
         initAlbum();
+        initPreview();
         initRsvp();
         initWishes();
         initGift();

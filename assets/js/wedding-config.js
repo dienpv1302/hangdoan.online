@@ -101,6 +101,43 @@ var WEDDING_ALBUM = {
     ]
 };
 
+/* --- 5b. 4 ẢNH XEM TRƯỚC Ở TRANG CHỦ ------------------------------------
+   Mục "Ảnh cưới" hiện 4 ô, mỗi ô gắn với một nhóm phông nền riêng nên lúc nào
+   cũng đủ 4 phông khác nhau. Cứ sau `interval` mili giây thì một ô đổi sang
+   ảnh khác trong cùng nhóm của nó (mờ dần sang ảnh mới, lần lượt từng ô).
+   Muốn tắt tự đổi: đặt interval = 0.                                       */
+var WEDDING_PREVIEW = {
+    interval: 3000,
+
+    // Cứ mỗi `interval` mili giây, một nhóm ô được chọn ngẫu nhiên (2 tới 4 ô)
+    // sẽ đảo vị trí cho nhau - phông nền đi theo ảnh sang ô mới, đồng thời một
+    // ô trong nhóm đó lấy luôn ảnh khác cùng phông. Số ô mỗi lượt khác nhau
+    // nên nhìn không bị đều đặn máy móc. Đặt interval = 0 để tắt hẳn.
+
+    groups: [
+        {
+            name: 'Nền đỏ chữ Hỷ',
+            photos: ['B.jpg', 'DUY_8703.jpg', 'DUY_8834.jpg', 'DUY_8856.jpg',
+                     'DUY_8729.jpg', 'DUY_8884.jpg']
+        },
+        {
+            name: 'Nền xanh olive',
+            photos: ['DUY_8351.jpg', 'DUY_8361.jpg', 'DUY_8369.jpg', 'DUY_8376.jpg',
+                     'DUY_8398.jpg', 'DUY_8400.jpg', 'DUY_8435.jpg', 'DUY_9107.jpg']
+        },
+        {
+            name: 'Nền xám studio',
+            photos: ['DUY_8491.jpg', 'DUY_8504.jpg', 'DUY_8553.jpg', 'DUY_8600.jpg',
+                     'DUY_8635.jpg', 'DUY_8639.jpg', 'DUY_8645.jpg']
+        },
+        {
+            name: 'Nền rèm trắng',
+            photos: ['DUY_8930.jpg', 'DUY_8939.jpg', 'DUY_8954.jpg', 'DUY_8964.jpg',
+                     'DUY_9191.jpg']
+        }
+    ]
+};
+
 /* --- 6. XÁC NHẬN THAM DỰ (RSVP) -----------------------------------------
    Web tĩnh không tự lưu được dữ liệu, nên form gửi về một bảng Google Sheets
    của bạn. Các bước lấy đường dẫn xem trong README-rsvp.md (làm 1 lần, ~5 phút).

@@ -55,8 +55,49 @@
 /* ---------- Mục "Ảnh cưới": các ô bằng nhau, ảnh khít khung ----------
    Ảnh gốc là ảnh dọc (khoảng 670x1010) nên khi kéo full chiều rộng ô thì rất
    cao. Đưa về khung tỉ lệ cố định, ảnh lấp đầy ô và cắt bớt phần thừa.       */
-.wpo-portfolio-section-s2 .portfolio-grids .grid .img-holder a {
+.wpo-portfolio-section-s2 .portfolio-grids .grid .img-holder a,
+.wpo-portfolio-section-s2 .portfolio-grids .grid .img-holder .preview-item {
     display: block;   /* bỏ khoảng hở dưới ảnh, lớp phủ khi rê chuột khít ảnh */
+}
+
+/* ---------- Bốn ô ảnh tự đổi ----------
+   Mỗi ô chứa hai thẻ ảnh chồng khít lên nhau. Khi đổi, ảnh mới hiện dần đè
+   lên ảnh cũ (cross-fade) nên mắt không thấy khoảng trống hay cú nháy nào.
+   Khung giữ tỉ lệ cố định để hai lớp ảnh luôn khít nhau.                    */
+.preview-item {
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: #FDF8F6;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: var(--gallery-ratio);
+}
+
+.wpo-portfolio-section-s2 .portfolio-grids .grid .img-holder .preview-item img {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;          /* chiều cao đã do khung quyết định */
+    -o-object-fit: cover;
+       object-fit: cover;
+    -webkit-transition: opacity 1.1s ease-in-out;
+    transition: opacity 1.1s ease-in-out;
+    will-change: opacity;
+}
+
+.preview-item:focus-visible {
+    outline: 2px solid #D4B0A5;
+    outline-offset: 2px;
+}
+
+@media (max-width: 575px) {
+    .preview-item {
+        aspect-ratio: var(--gallery-ratio-mobile);
+    }
 }
 
 .wpo-portfolio-section-s2 .portfolio-grids .grid .img-holder img {
@@ -160,6 +201,46 @@
     .wedding-calendar-table td.is-marked {
         background-image: radial-gradient(circle at center, #D4B0A5 0, #D4B0A5 15px, transparent 16px);
     }
+}
+
+/* ---------- Khung ảnh cô dâu & chú rể ----------
+   Chỉ chỉnh CÁCH HIỂN THỊ, hai file ảnh gốc không hề bị sửa.
+
+   Cách cũ để ảnh tự co theo max-width/max-height 400px nên sinh hai lỗi:
+   - Ảnh hẹp hơn khung chứa nó, trong khi lớp mask lại phủ theo khung -> hai
+     thứ lệch nhau, phần dôi dồn về một bên (rìa thừa bên phải ảnh cô dâu).
+   - Hai ảnh khác tỉ lệ (chú rể dọc, cô dâu ngang) nên ra hai khung to nhỏ
+     khác nhau, mask vuông lúc thì hụt lúc thì tràn.
+   Nay cố định khung chung cho cả hai, ảnh lấp đầy khung, mask phủ theo cover
+   nên vòng tròn luôn tròn đều và ôm khít.                                    */
+:root {
+    --couple-ratio: 4 / 5;     /* tỉ lệ khung ảnh: rộng / cao */
+    --couple-width: 360px;     /* bề ngang tối đa của khung   */
+}
+
+.wpo-couple-section .couple-area .couple-item .couple-img {
+    width: 100%;
+    max-width: var(--couple-width);
+    margin-left: auto;
+    margin-right: auto;
+    aspect-ratio: var(--couple-ratio);
+    overflow: hidden;
+}
+
+.wpo-couple-section .couple-area .couple-item .couple-img img {
+    width: 100%;
+    height: 100%;
+    -o-object-fit: cover;
+       object-fit: cover;
+    display: block;
+}
+
+/* Mask phủ kín khung mà vẫn giữ hình tròn.
+   Dùng cover chứ KHÔNG dùng 100% 100%: cover phóng to mask theo đúng tỉ lệ
+   vuông gốc rồi cắt bớt phần thừa nên vòng tròn tròn đều. Còn 100% 100% sẽ
+   kéo giãn mask cho vừa khung dọc, làm vòng tròn bị bó thành hình oval. */
+.wpo-couple-section .couple-area .couple-item .couple-img:after {
+    background-size: cover;
 }
 
 /* ---------- Lời ngỏ của cô dâu & chú rể ---------- */
