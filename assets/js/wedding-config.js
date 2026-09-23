@@ -41,8 +41,8 @@ var WEDDING_GIFT = {
 var WEDDING_DAY = {
     date: '2026-10-11',
     highlights: [
-        { day: '2026-10-10', label: 'Lễ nhà gái' },
-        { day: '2026-10-11', label: 'Lễ thành hôn' }
+        { day: '2026-10-09', label: 'Lễ Cưới' },
+        { day: '2026-10-11', label: 'Lễ Thành Hôn' }
     ]
 };
 
