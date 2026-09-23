@@ -50,13 +50,14 @@ var WEDDING_DAY = {
 var WEDDING_INTRO = {
     groom: 'Xin chào mọi người, mình là một Kỹ sư. Công việc giúp mình rèn luyện tư duy ' +
            'logic, sự kiên trì và tinh thần trách nhiệm trong mọi việc. Hôm nay, mình vô cùng ' +
-           'hạnh phúc khi được nắm tay người mình yêu bước vào một chặng đường mới. Xin chân ' +
-           'thành cảm ơn gia đình, người thân và bạn bè đã có mặt để chung vui và chúc phúc ' +
-           'cho chúng mình.',
+           'hạnh phúc khi được nắm tay người mình yêu bước vào một chặng đường mới. Xin trân ' +
+           'trọng kính mời gia đình, người thân và bạn bè đến chung vui, để hạnh phúc này được ' +
+           'trọn vẹn hơn khi có mọi người bên cạnh.',
     bride: 'Xin chào mọi người, mình là một Bác sĩ. Công việc đã dạy mình sự tận tâm, trách ' +
            'nhiệm và luôn biết trân trọng những giá trị của cuộc sống. Hôm nay, mình rất hạnh ' +
-           'phúc khi được cùng người mình yêu bước sang một hành trình mới. Xin cảm ơn gia ' +
-           'đình, người thân và bạn bè đã đến chung vui và chúc phúc cho chúng mình.'
+           'phúc khi được cùng người mình yêu bước sang một hành trình mới. Xin trân trọng kính ' +
+           'mời gia đình, người thân và bạn bè đến chung vui, để hạnh phúc này được trọn vẹn ' +
+           'hơn khi có mọi người bên cạnh.'
 };
 
 /* --- 5. ALBUM ẢNH CƯỚI (trang gallery.html) -----------------------------
